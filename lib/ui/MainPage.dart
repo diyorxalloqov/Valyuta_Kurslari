@@ -24,19 +24,21 @@ class _MainPageState extends State<MainPage> {
             builder: (context, AsyncSnapshot<NetworkResponseConfig> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: CircularProgressIndicator.adaptive(),
+                  child: CircularProgressIndicator(),
                 );
-              } else if ((snapshot.data is NetworkErrorResponse)) {
+              } else if (snapshot.data is NetworkErrorResponse) {
                 return Center(
-                  child: Text((snapshot.data as NetworkErrorResponse).error),
+                  child: Text(
+                      (snapshot.data as NetworkErrorResponse).error.toString()),
                 );
               } else if (snapshot.data is NetworkExeptionResponse) {
                 return Center(
-                    child: Text((snapshot.data as NetworkExeptionResponse)
-                        .messageForUser));
+                  child: Text((snapshot.data as NetworkExeptionResponse)
+                      .messageForUser
+                      .toString()),
+                );
               } else {
-                List<UserModel> data =
-                    (snapshot.data as NetworkSuccesResponse).model;
+                List<UserModel> data = (snapshot.data as NetworkSuccesResponse).model;
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     return Card(

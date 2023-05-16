@@ -4,19 +4,19 @@ abstract class NetworkResponseConfig {
   NetworkResponseConfig();
 }
 
-class NetworkSuccesResponse<T> extends NetworkResponseConfig {
-  T model;
+class NetworkSuccesResponse<Model> extends NetworkResponseConfig {
+  Model model;
   NetworkSuccesResponse(this.model);
 }
 
 class NetworkErrorResponse extends NetworkResponseConfig {
-  String error;
+  String error = "";
   NetworkErrorResponse(this.error);
 }
 
 class NetworkExeptionResponse extends NetworkResponseConfig {
   DioError exeption;
-  String messageForUser = "";
+  String messageForUser = '';
   NetworkExeptionResponse(this.exeption) {
     if (exeption.type == DioErrorType.connectionTimeout ||
         exeption.type == DioErrorType.receiveTimeout ||
@@ -24,7 +24,7 @@ class NetworkExeptionResponse extends NetworkResponseConfig {
         exeption.type == DioErrorType.unknown) {
       messageForUser = 'Iltimos Internetingizni tekshiring';
     } else {
-      messageForUser == exeption.message.toString();
+      messageForUser = exeption.message.toString();
     }
   }
 }
