@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navigating_routing/core/config/network_response_config.dart';
 import 'package:navigating_routing/model/UserModel.dart';
 import 'package:navigating_routing/service/UserService.dart';
 import 'package:country_flags/country_flags.dart';
@@ -20,23 +21,29 @@ class _MainPageState extends State<MainPage> {
         ),
         body: FutureBuilder(
             future: UserService().getUser(),
-            builder: (context, AsyncSnapshot snapshot) {
+            builder: (context, AsyncSnapshot<NetworkResponseConfig> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 );
-              } else if (snapshot.data is String) {
+              } else if ((snapshot.data is NetworkErrorResponse)) {
                 return Center(
-                  child: Text(snapshot.data.toString()),
+                  child: Text((snapshot.data as NetworkErrorResponse).error),
                 );
+              } else if (snapshot.data is NetworkExeptionResponse) {
+                return Center(
+                    child: Text((snapshot.data as NetworkExeptionResponse)
+                        .messageForUser));
               } else {
-                var data = snapshot.data as List<UserModel>;
+                List<UserModel> data =
+                    (snapshot.data as NetworkSuccesResponse).model;
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     return Card(
                       color: Colors.white24,
-                      margin:  EdgeInsets.symmetric(
-                          horizontal: mq.width*0.03, vertical: mq.height*0.01),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: mq.width * 0.03,
+                          vertical: mq.height * 0.01),
                       child: ListTile(
                           leading: CountryFlags.flag(
                             data[index].code!.substring(0, 2),
